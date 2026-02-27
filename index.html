@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARC 2026 Calendar</title>
-    <meta name="theme-color" content="#0D0D0D">
+    <meta name="theme-color" content="#FFFFFF">
     <meta name="description" content="ARC 2026 Blockchain Events Calendar">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
@@ -13,17 +13,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0D0D0D;
-            --bg-secondary: #161616;
-            --bg-card: #1A1A1A;
-            --bg-card-hover: #222222;
-            --text-primary: #FFFFFF;
-            --text-secondary: #A0A0A0;
-            --text-muted: #666666;
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --bg-card-hover: #F5F5F5;
+            --text-primary: #111111;
+            --text-secondary: #666666;
+            --text-muted: #999999;
             --accent-purple: #9945FF;
             --accent-cyan: #14F195;
             --accent-gradient: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
-            --border-color: #2A2A2A;
+            --border-color: #E5E5E5;
             --stellar-purple: #9945FF;
             --stellar-cyan: #14F195;
         }
@@ -51,28 +51,14 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 20%, rgba(153, 69, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(20, 241, 149, 0.05) 0%, transparent 50%),
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 50px,
-                    rgba(255,255,255,0.01) 50px,
-                    rgba(255,255,255,0.01) 51px
-                ),
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 50px,
-                    rgba(255,255,255,0.01) 50px,
-                    rgba(255,255,255,0.01) 51px
-                );
+                radial-gradient(circle at 20% 20%, rgba(153, 69, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(20, 241, 149, 0.04) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
         
         header {
-            background: linear-gradient(180deg, rgba(153, 69, 255, 0.15) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(153, 69, 255, 0.08) 0%, transparent 100%);
             padding: 40px 20px;
             text-align: center;
             border-bottom: 1px solid var(--border-color);
@@ -345,7 +331,7 @@
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(153, 69, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(153, 69, 255, 0.3);
             display: none;
             z-index: 100;
             font-family: 'Space Grotesk', sans-serif;
