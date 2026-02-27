@@ -4,11 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARC 2026 Calendar</title>
-    <meta name="theme-color" content="#6c5ce7">
+    <meta name="theme-color" content="#0D0D0D">
     <meta name="description" content="ARC 2026 Blockchain Events Calendar">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0D0D0D;
+            --bg-secondary: #161616;
+            --bg-card: #1A1A1A;
+            --bg-card-hover: #222222;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0A0A0;
+            --text-muted: #666666;
+            --accent-purple: #9945FF;
+            --accent-cyan: #14F195;
+            --accent-gradient: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+            --border-color: #2A2A2A;
+            --stellar-purple: #9945FF;
+            --stellar-cyan: #14F195;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -16,258 +35,473 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
             min-height: 100vh;
-            color: #fff;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(153, 69, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(20, 241, 149, 0.05) 0%, transparent 50%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 50px,
+                    rgba(255,255,255,0.01) 50px,
+                    rgba(255,255,255,0.01) 51px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 50px,
+                    rgba(255,255,255,0.01) 50px,
+                    rgba(255,255,255,0.01) 51px
+                );
+            pointer-events: none;
+            z-index: 0;
         }
         
         header {
-            background: linear-gradient(135deg, #6c5ce7 0%, #a855f7 100%);
-            padding: 20px;
+            background: linear-gradient(180deg, rgba(153, 69, 255, 0.15) 0%, transparent 100%);
+            padding: 40px 20px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
         }
         
         h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
         
         .subtitle {
-            font-size: 0.85rem;
-            opacity: 0.9;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
         
         .legend {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            padding: 15px 20px;
-            background: rgba(255,255,255,0.05);
+            gap: 30px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
         
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
         
         .legend-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
         }
         
-        .legend-dot.purple { background: #9333ea; }
-        .legend-dot.blue { background: #3b82f6; }
+        .legend-dot.stellar { 
+            background: var(--stellar-purple);
+            box-shadow: 0 0 10px var(--stellar-purple);
+        }
+        
+        .legend-dot.attending { 
+            background: var(--stellar-cyan);
+            box-shadow: 0 0 10px var(--stellar-cyan);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
+        }
         
         .month {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 40px;
         }
         
         .month-header {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            color: #a855f7;
-            margin-bottom: 15px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
         }
         
-        .month-icon {
-            font-size: 1.4rem;
+        .month-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
         
         .event {
-            background: rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #666;
-            transition: transform 0.2s, box-shadow 0.2s;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .event::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--border-color);
+            transition: all 0.2s ease;
         }
         
         .event:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
         }
         
-        .event.stellar { border-left-color: #9333ea; }
-        .event.attending { border-left-color: #3b82f6; }
+        .event.stellar::before {
+            background: var(--stellar-purple);
+            box-shadow: 0 0 20px var(--stellar-purple);
+        }
+        
+        .event.attending::before {
+            background: var(--stellar-cyan);
+            box-shadow: 0 0 20px var(--stellar-cyan);
+        }
         
         .event-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
         
         .event-name {
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.05rem;
             flex: 1;
+            min-width: 200px;
         }
         
         .event-date {
-            background: rgba(255,255,255,0.15);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.05);
+            padding: 6px 14px;
+            border-radius: 8px;
             white-space: nowrap;
+            border: 1px solid var(--border-color);
         }
         
         .event-location {
-            color: #94a3b8;
-            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
         
         .event-contact {
             font-size: 0.8rem;
-            color: #a855f7;
-            margin-bottom: 8px;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-family: 'JetBrains Mono', monospace;
         }
         
         .event-url {
-            display: inline-block;
-            background: rgba(108, 92, 231, 0.3);
-            color: #a855f7;
-            padding: 6px 12px;
-            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(153, 69, 255, 0.15);
+            color: var(--accent-purple);
+            padding: 8px 16px;
+            border-radius: 8px;
             text-decoration: none;
-            font-size: 0.8rem;
-            transition: background 0.2s;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid rgba(153, 69, 255, 0.3);
         }
         
         .event-url:hover {
-            background: rgba(108, 92, 231, 0.5);
+            background: rgba(153, 69, 255, 0.25);
+            border-color: var(--accent-purple);
+        }
+        
+        /* Tags */
+        .tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-left: 8px;
+        }
+        
+        .tag.stellar {
+            background: rgba(153, 69, 255, 0.2);
+            color: var(--stellar-purple);
+        }
+        
+        .tag.attending {
+            background: rgba(20, 241, 149, 0.15);
+            color: var(--stellar-cyan);
         }
         
         .install-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #6c5ce7 0%, #a855f7 100%);
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent-gradient);
             color: white;
             border: none;
-            padding: 15px 25px;
-            border-radius: 30px;
-            font-size: 1rem;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.5);
+            box-shadow: 0 4px 20px rgba(153, 69, 255, 0.4);
             display: none;
             z-index: 100;
+            font-family: 'Space Grotesk', sans-serif;
         }
         
         .install-btn.show {
             display: block;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(153, 69, 255, 0.4); }
+            50% { box-shadow: 0 4px 30px rgba(153, 69, 255, 0.6); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+        }
+        
+        footer a {
+            color: var(--accent-purple);
+            text-decoration: none;
         }
         
         @media (max-width: 600px) {
+            header {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stats-bar {
+                gap: 25px;
+            }
+            
             .event-header {
                 flex-direction: column;
             }
             
             .month {
-                padding: 15px;
+                margin-bottom: 30px;
+            }
+            
+            .container {
+                padding: 20px 15px;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>🗓️ ARC 2026 Calendar</h1>
-        <p class="subtitle">Blockchain & Tech Events</p>
+        <div class="logo">
+            <div class="logo-icon">◎</div>
+            <h1>ARC 2026</h1>
+        </div>
+        <p class="subtitle">Blockchain & Tech Events Calendar</p>
+        
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">50</div>
+                <div class="stat-label">Events</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Stellar Events</div>
+            </div>
+        </div>
     </header>
     
     <div class="legend">
         <div class="legend-item">
-            <div class="legend-dot purple"></div>
-            <span>Stellar Events</span>
+            <div class="legend-dot stellar"></div>
+            <span>Stellar Organized</span>
         </div>
         <div class="legend-item">
-            <div class="legend-dot blue"></div>
+            <div class="legend-dot attending"></div>
             <span>Stellars Attending</span>
         </div>
     </div>
     
-    <div id="calendar"></div>
+    <div class="container" id="calendar"></div>
     
-    <button class="install-btn" id="installBtn">📲 Install App</button>
+    <footer>
+        <p>Built with ◉ ARC Community</p>
+    </footer>
+    
+    <button class="install-btn" id="installBtn">⬇ Install App</button>
     
     <script>
         const events = [
-            { month: 'January', date: 'Jan 20 – Jan 26', name: 'AAAI 2026', location: '🇸🇬 Singapore', type: '', url: 'https://aaai.org/conference/aaai/aaai-26/' },
-            { month: 'January', date: 'Jan 28 – Jan 30', name: 'WAGMI Miami', location: '🇺🇸 Miami, USA', type: '', url: 'https://events.coinpedia.org/wagmi-miami-2026-6906/' },
-            { month: 'January', date: 'Jan 29 – Feb 3', name: 'Satoshi Roundtable', location: '🇦🇪 Dubai, UAE', type: '', url: 'https://events.coinpedia.org/satoshi-roundtable-xii-7458/' },
-            { month: 'January', date: 'Jan 31 – Feb 2', name: "CatLumpur'26", location: '🇲🇾 Kuala Lumpur, Malaysia', type: '', url: 'https://kl.jup.ag/' },
-            { month: 'February', date: 'Feb 10', name: 'MemeCon Meetup Riyadh Edition', location: '🇸🇦 Saudi Arabia', type: '', url: 'https://droomdroom.com/events/memecon-meetup-riyadh-edition' },
-            { month: 'February', date: 'Feb 10 – 12', name: '🟣 Consensus Hong Kong', location: '🇭🇰 Hong Kong', contact: 'Michael Lau', url: 'https://consensus-hongkong.coindesk.com/', type: 'stellar' },
-            { month: 'February', date: 'Feb 11 – 12', name: 'Africa Tech Summit', location: '🇰🇪 Nairobi, Kenya', url: 'https://www.africatechsummit.com/nairobi/' },
-            { month: 'February', date: 'Feb 12 – 13', name: 'World AI Cannes Festival 2026', location: '🇫🇷 Cannes, France', url: 'https://www.worldaicannes.com' },
-            { month: 'February', date: 'Feb 18 – 21', name: '🔵 ETHDenver 2026', location: '🇺🇸 Denver, USA', type: 'attending', url: 'https://www.ethdenver.com/' },
-            { month: 'March', date: 'Mar 1 – 2', name: 'Crypto Expo Europe', location: '🇷🇴 Bucharest, Romania', url: 'https://cryptoexpoeurope.com/' },
-            { month: 'March', date: 'Mar 3 – 6', name: 'Japan Fintech Week 2026', location: '🇯🇵 Tokyo, Japan', url: 'https://www.finsum.jp/en_index.html' },
-            { month: 'March', date: 'Mar 9 – 11', name: 'Gartner Data & Analytics Summit 2026', location: '🇺🇸 Orlando, USA', url: 'https://www.gartner.com/en/conferences/na/data-analytics-us' },
-            { month: 'March', date: 'Mar 16 – 19', name: 'NVIDIA GTC 2026', location: '🇺🇸 San Jose, USA', url: 'https://www.nvidia.com/gtc/' },
-            { month: 'March', date: 'Mar 17 – 18', name: 'DC Blockchain Summit', location: '🇺🇸 Washington DC, USA', url: 'https://www.dcblockchainsummit.com/' },
-            { month: 'March', date: 'Mar 24 – 26', name: 'Digital Asset Summit', location: '🇺🇸 New York, USA', url: 'https://blockworks.co/event/digital-asset-summit-nyc-2026' },
-            { month: 'March', date: 'Mar 30 – Apr 2', name: 'Ethereum Community Conference (EthCC)', location: '🇫🇷 Cannes, France', url: 'https://ethcc.io/' },
-            { month: 'April', date: 'Apr 15 – 16', name: 'Paris Blockchain Week', location: '🇫🇷 Paris, France', url: 'https://www.parisblockchainweek.com/' },
-            { month: 'April', date: 'Apr 17 – 19', name: 'Bitcoin Africa Conference', location: '🇧🇫 Ouagadougou, Burkina Faso', url: 'https://www.afriquebitcoin.org/' },
-            { month: 'April', date: 'Apr 22 – 24', name: "Google Cloud Next '26", location: '🇺🇸 Las Vegas, USA', url: 'https://www.googlecloudevents.com/next-vegas' },
-            { month: 'April', date: 'Apr 27 – 29', name: 'Bitcoin 2026', location: '🇺🇸 Las Vegas, USA', url: 'https://2026.b.tc/' },
-            { month: 'April', date: 'Apr 29 – 30', name: '🔵 TOKEN2049 Dubai', location: '🇦🇪 Dubai, UAE', type: 'attending', url: 'https://www.token2049.com/dubai' },
-            { month: 'May', date: 'May 1 – 2', name: 'Unchained Summit', location: '🇦🇪 Dubai, UAE', url: 'https://unchainedsummit.com/dubai/' },
-            { month: 'May', date: 'May 5 – 7', name: '🟣 Consensus Miami', location: '🇺🇸 Miami, USA', contact: 'Michael Lau', url: 'https://consensus.coindesk.com/', type: 'stellar' },
-            { month: 'May', date: 'May 8 – 9', name: 'Conviction 2026', location: '🇻🇳 Ho Chi Minh City, Vietnam', contact: 'Minh Ho', url: 'https://www.conviction.vn/' },
-            { month: 'May', date: 'May 13 – 14', name: 'Digital Assets Week USA', location: '🇺🇸 New York, USA', url: 'https://daweek.org/usa-26/' },
-            { month: 'May', date: 'May 20 – 21', name: '🟣 Southeast Asia Blockchain Week 2026', location: '🇹🇭 Bangkok, Thailand', type: 'stellar', url: 'https://seablockchainweek.org/' },
-            { month: 'May', date: 'May 26 – 27', name: 'Nordic Blockchain Conference', location: '🇸🇪 Stockholm, Sweden', url: 'https://www.nordicblockchain.com/conference-2026' },
-            { month: 'May', date: 'May 28 – 29', name: 'Unchained Summit Vietnam', location: '🇻🇳 Da Nang, Vietnam', url: 'https://unchainedsummit.com/vietnam/' },
-            { month: 'May', date: 'May 28 – 29', name: 'Crypto Valley Conference', location: '🇨🇭 Rotkreuz, Switzerland', url: 'https://www.cryptovalleyconference.com/' },
-            { month: 'June', date: 'Jun 2 – 3', name: 'Istanbul Blockchain Week', location: '🇹🇷 İstanbul, Turkey', url: 'https://istanbulblockchainweek.com/' },
-            { month: 'June', date: 'Jun 3', name: 'CommerceAI Summit 2026', location: '🇬🇧 London, UK', url: 'https://retailx.events/commerceai-summit-2026' },
-            { month: 'June', date: 'Jun 11 – 13', name: 'BTC Prague', location: '🇨🇿 Prague, Czechia', url: 'https://btcprague.com/' },
-            { month: 'June', date: 'Jun 15 – 16', name: 'Databricks Data + AI Summit 2026', location: '🇺🇸 San Francisco, USA', url: 'https://www.databricks.com/dataaisummit' },
-            { month: 'June', date: 'Jun 24 – 26', name: 'Permissionless IV', location: '🇳🇿 Brooklyn, NY, USA', url: 'https://blockworks.co/event/permissionless-iv' },
-            { month: 'July', date: 'Jul 6 – 11', name: 'ICML 2026', location: '🇰🇵 Seoul, South Korea', url: 'https://icml.cc' },
-            { month: 'July', date: 'Jul 13 – 14', name: '🔵 WebX 2026', location: '🇯🇵 Kyoto, Japan', type: 'attending', url: 'https://webx-asia.com/' },
-            { month: 'July', date: 'Jul 21 – 22', name: 'ETHWomen Toronto', location: '🇨🇦 Toronto, Canada', url: 'https://www.ethwomen.com/' },
-            { month: 'July', date: 'Jul 21 – 22', name: 'Blockchain Futurist Conference', location: '🇨🇦 Toronto, Canada', url: 'https://futuristconference.com/' },
-            { month: 'July', date: 'Jul 28 – 31', name: 'Rare Evo 2026', location: '🇺🇸 Las Vegas, USA', url: 'https://rareevo.io/' },
-            { month: 'July', date: 'Jul 29 – 30', name: '🟣 Malaysia Blockchain Week 2026', location: '🇲🇾 Kuala Lumpur, Malaysia', contact: 'Ian Tan, Noelle, Joan & Max', url: 'https://myblockchainweek.com/', type: 'stellar' },
-            { month: 'August', date: 'Aug 4 – 6', name: 'Ai4 2026', location: '🇺🇸 Las Vegas, USA', url: 'https://ai4.io/' },
-            { month: 'August', date: 'Aug 15 – 21', name: 'IJCAI-ECAI 2026', location: '🇩🇪 Bremen, Germany', url: 'https://2026.ijcai.org/' },
-            { month: 'August', date: 'Aug 20 – 21', name: '🔵 Coinfest Asia', location: '🇮🇩 Bali, Indonesia', type: 'attending', url: 'https://coinfest.asia/' },
-            { month: 'August', date: 'Aug 27 – 28', name: 'Bitcoin Summit 2026', location: '🇭🇰 Hong Kong', url: 'https://asia.b.tc/2026' },
-            { month: 'September', date: 'Sep 16 – 17', name: 'European Blockchain Convention', location: '🇪🇸 Barcelona, Spain', url: 'https://eblockchainconvention.com/european-blockchain-convention-12/' },
-            { month: 'September', date: 'Sep 29 – Oct 1', name: '🟣 Korea Blockchain Week 2026', location: '🇰🇵 Seoul, South Korea', contact: 'Seonik, Brian Kang', url: 'https://koreablockchainweek.com/', type: 'stellar' },
-            { month: 'October', date: 'Oct 7 – 8', name: '🔵 TOKEN2049 Singapore', location: '🇸🇬 Singapore', type: 'attending', url: 'https://www.asia.token2049.com/' },
-            { month: 'November', date: 'Nov 3 – 6', name: 'Devcon 8 Mumbai', location: '🇮🇳 Mumbai, India', url: 'https://devcon.org/en/' },
-            { month: 'November', date: 'Nov 9 – 12', name: 'Web Summit 2026', location: '🇵🇹 Lisbon, Portugal', url: 'https://websummit.com/' },
-            { month: 'November', date: 'Nov 15 – 17', name: 'Solana Breakpoint 2026', location: '🇬🇧 London, UK', url: 'https://solana.com/breakpoint' },
-            { month: 'November', date: 'Nov 17 – 20', name: 'Microsoft Ignite 2026', location: '🇺🇸 San Francisco, USA', url: 'https://ignite.microsoft.com/' },
-            { month: 'December', date: 'Dec 1 – 2', name: 'Blockchain Life 2026', location: '🇦🇪 Dubai, UAE', url: 'https://blockchain-life.com/autumn2026/' },
-            { month: 'December', date: 'Dec 6 – 12', name: 'NeurIPS 2026', location: '🇦🇺 Sydney, Australia', url: 'https://neurips.cc' }
+            { month: 'January', monthNum: '01', date: 'Jan 20 – 26', name: 'AAAI 2026', location: '🇸🇬 Singapore', url: 'https://aaai.org/conference/aaai/aaai-26/' },
+            { month: 'January', monthNum: '01', date: 'Jan 28 – 30', name: 'WAGMI Miami', location: '🇺🇸 Miami, USA', url: 'https://events.coinpedia.org/wagmi-miami-2026-6906/' },
+            { month: 'January', monthNum: '01', date: 'Jan 29 – Feb 3', name: 'Satoshi Roundtable XII', location: '🇦🇪 Dubai, UAE', url: 'https://events.coinpedia.org/satoshi-roundtable-xii-7458/' },
+            { month: 'January', monthNum: '01', date: 'Jan 31 – Feb 2', name: "CatLumpur'26", location: '🇲🇾 Kuala Lumpur, Malaysia', url: 'https://kl.jup.ag/' },
+            { month: 'February', monthNum: '02', date: 'Feb 10', name: 'MemeCon Meetup Riyadh', location: '🇸🇦 Saudi Arabia', url: 'https://droomdroom.com/events/memecon-meetup-riyadh-edition' },
+            { month: 'February', monthNum: '02', date: 'Feb 10 – 12', name: '🟣 Consensus Hong Kong', location: '🇭🇰 Hong Kong', contact: 'Michael Lau', url: 'https://consensus-hongkong.coindesk.com/', type: 'stellar' },
+            { month: 'February', monthNum: '02', date: 'Feb 11 – 12', name: 'Africa Tech Summit', location: '🇰🇪 Nairobi, Kenya', url: 'https://www.africatechsummit.com/nairobi/' },
+            { month: 'February', monthNum: '02', date: 'Feb 12 – 13', name: 'World AI Cannes Festival', location: '🇫🇷 Cannes, France', url: 'https://www.worldaicannes.com' },
+            { month: 'February', monthNum: '02', date: 'Feb 18 – 21', name: '🔵 ETHDenver 2026', location: '🇺🇸 Denver, USA', type: 'attending', url: 'https://www.ethdenver.com/' },
+            { month: 'March', monthNum: '03', date: 'Mar 1 – 2', name: 'Crypto Expo Europe', location: '🇷🇴 Bucharest, Romania', url: 'https://cryptoexpoeurope.com/' },
+            { month: 'March', monthNum: '03', date: 'Mar 3 – 6', name: 'Japan Fintech Week', location: '🇯🇵 Tokyo, Japan', url: 'https://www.finsum.jp/en_index.html' },
+            { month: 'March', monthNum: '03', date: 'Mar 9 – 11', name: 'Gartner Data & Analytics Summit', location: '🇺🇸 Orlando, USA', url: 'https://www.gartner.com/en/conferences/na/data-analytics-us' },
+            { month: 'March', monthNum: '03', date: 'Mar 16 – 19', name: 'NVIDIA GTC 2026', location: '🇺🇸 San Jose, USA', url: 'https://www.nvidia.com/gtc/' },
+            { month: 'March', monthNum: '03', date: 'Mar 17 – 18', name: 'DC Blockchain Summit', location: '🇺🇸 Washington DC, USA', url: 'https://www.dcblockchainsummit.com/' },
+            { month: 'March', monthNum: '03', date: 'Mar 24 – 26', name: 'Digital Asset Summit', location: '🇺🇸 New York, USA', url: 'https://blockworks.co/event/digital-asset-summit-nyc-2026' },
+            { month: 'March', monthNum: '03', date: 'Mar 30 – Apr 2', name: 'EthCC [16]', location: '🇫🇷 Cannes, France', url: 'https://ethcc.io/' },
+            { month: 'April', monthNum: '04', date: 'Apr 15 – 16', name: 'Paris Blockchain Week', location: '🇫🇷 Paris, France', url: 'https://www.parisblockchainweek.com/' },
+            { month: 'April', monthNum: '04', date: 'Apr 17 – 19', name: 'Bitcoin Africa Conference', location: '🇧🇫 Ouagadougou, Burkina Faso', url: 'https://www.afriquebitcoin.org/' },
+            { month: 'April', monthNum: '04', date: 'Apr 22 – 24', name: "Google Cloud Next '26", location: '🇺🇸 Las Vegas, USA', url: 'https://www.googlecloudevents.com/next-vegas' },
+            { month: 'April', monthNum: '04', date: 'Apr 27 – 29', name: 'Bitcoin 2026', location: '🇺🇸 Las Vegas, USA', url: 'https://2026.b.tc/' },
+            { month: 'April', monthNum: '04', date: 'Apr 29 – 30', name: '🔵 TOKEN2049 Dubai', location: '🇦🇪 Dubai, UAE', type: 'attending', url: 'https://www.token2049.com/dubai' },
+            { month: 'May', monthNum: '05', date: 'May 1 – 2', name: 'Unchained Summit', location: '🇦🇪 Dubai, UAE', url: 'https://unchainedsummit.com/dubai/' },
+            { month: 'May', monthNum: '05', date: 'May 5 – 7', name: '🟣 Consensus Miami', location: '🇺🇸 Miami, USA', contact: 'Michael Lau', url: 'https://consensus.coindesk.com/', type: 'stellar' },
+            { month: 'May', monthNum: '05', date: 'May 8 – 9', name: 'Conviction 2026', location: '🇻🇳 Ho Chi Minh City', contact: 'Minh Ho', url: 'https://www.conviction.vn/' },
+            { month: 'May', monthNum: '05', date: 'May 13 – 14', name: 'Digital Assets Week USA', location: '🇺🇸 New York, USA', url: 'https://daweek.org/usa-26/' },
+            { month: 'May', monthNum: '05', date: 'May 20 – 21', name: '🟣 SEA Blockchain Week', location: '🇹🇭 Bangkok, Thailand', type: 'stellar', url: 'https://seablockchainweek.org/' },
+            { month: 'May', monthNum: '05', date: 'May 26 – 27', name: 'Nordic Blockchain Conference', location: '🇸🇪 Stockholm, Sweden', url: 'https://www.nordicblockchain.com/conference-2026' },
+            { month: 'May', monthNum: '05', date: 'May 28 – 29', name: 'Unchained Summit Vietnam', location: '🇻🇳 Da Nang, Vietnam', url: 'https://unchainedsummit.com/vietnam/' },
+            { month: 'May', monthNum: '05', date: 'May 28 – 29', name: 'Crypto Valley Conference', location: '🇨🇭 Rotkreuz, Switzerland', url: 'https://www.cryptovalleyconference.com/' },
+            { month: 'June', monthNum: '06', date: 'Jun 2 – 3', name: 'Istanbul Blockchain Week', location: '🇹🇷 İstanbul, Turkey', url: 'https://istanbulblockchainweek.com/' },
+            { month: 'June', monthNum: '06', date: 'Jun 3', name: 'CommerceAI Summit', location: '🇬🇧 London, UK', url: 'https://retailx.events/commerceai-summit-2026' },
+            { month: 'June', monthNum: '06', date: 'Jun 11 – 13', name: 'BTC Prague', location: '🇨🇿 Prague, Czechia', url: 'https://btcprague.com/' },
+            { month: 'June', monthNum: '06', date: 'Jun 15 – 16', name: 'Databricks Data + AI Summit', location: '🇺🇸 San Francisco, USA', url: 'https://www.databricks.com/dataaisummit' },
+            { month: 'June', monthNum: '06', date: 'Jun 24 – 26', name: 'Permissionless IV', location: '🇳🇿 Brooklyn, NY, USA', url: 'https://blockworks.co/event/permissionless-iv' },
+            { month: 'July', monthNum: '07', date: 'Jul 6 – 11', name: 'ICML 2026', location: '🇰🇷 Seoul, South Korea', url: 'https://icml.cc' },
+            { month: 'July', monthNum: '07', date: 'Jul 13 – 14', name: '🔵 WebX 2026', location: '🇯🇵 Kyoto, Japan', type: 'attending', url: 'https://webx-asia.com/' },
+            { month: 'July', monthNum: '07', date: 'Jul 21 – 22', name: 'ETHWomen Toronto', location: '🇨🇦 Toronto, Canada', url: 'https://www.ethwomen.com/' },
+            { month: 'July', monthNum: '07', date: 'Jul 21 – 22', name: 'Blockchain Futurist Conference', location: '🇨🇦 Toronto, Canada', url: 'https://futuristconference.com/' },
+            { month: 'July', monthNum: '07', date: 'Jul 28 – 31', name: 'Rare Evo 2026', location: '🇺🇸 Las Vegas, USA', url: 'https://rareevo.io/' },
+            { month: 'July', monthNum: '07', date: 'Jul 29 – 30', name: '🟣 Malaysia Blockchain Week', location: '🇲🇾 Kuala Lumpur', contact: 'Ian Tan, Noelle, Joan & Max', url: 'https://myblockchainweek.com/', type: 'stellar' },
+            { month: 'August', monthNum: '08', date: 'Aug 4 – 6', name: 'Ai4 2026', location: '🇺🇸 Las Vegas, USA', url: 'https://ai4.io/' },
+            { month: 'August', monthNum: '08', date: 'Aug 15 – 21', name: 'IJCAI-ECAI 2026', location: '🇩🇪 Bremen, Germany', url: 'https://2026.ijcai.org/' },
+            { month: 'August', monthNum: '08', date: 'Aug 20 – 21', name: '🔵 Coinfest Asia', location: '🇮🇩 Bali, Indonesia', type: 'attending', url: 'https://coinfest.asia/' },
+            { month: 'August', monthNum: '08', date: 'Aug 27 – 28', name: 'Bitcoin Summit 2026', location: '🇭🇰 Hong Kong', url: 'https://asia.b.tc/2026' },
+            { month: 'September', monthNum: '09', date: 'Sep 16 – 17', name: 'European Blockchain Convention', location: '🇪🇸 Barcelona, Spain', url: 'https://eblockchainconvention.com/european-blockchain-convention-12/' },
+            { month: 'September', monthNum: '09', date: 'Sep 29 – Oct 1', name: '🟣 Korea Blockchain Week', location: '🇰🇷 Seoul, South Korea', contact: 'Seonik, Brian Kang', url: 'https://koreablockchainweek.com/', type: 'stellar' },
+            { month: 'October', monthNum: '10', date: 'Oct 7 – 8', name: '🔵 TOKEN2049 Singapore', location: '🇸🇬 Singapore', type: 'attending', url: 'https://www.asia.token2049.com/' },
+            { month: 'November', monthNum: '11', date: 'Nov 3 – 6', name: 'Devcon 8', location: '🇮🇳 Mumbai, India', url: 'https://devcon.org/en/' },
+            { month: 'November', monthNum: '11', date: 'Nov 9 – 12', name: 'Web Summit 2026', location: '🇵🇹 Lisbon, Portugal', url: 'https://websummit.com/' },
+            { month: 'November', monthNum: '11', date: 'Nov 15 – 17', name: 'Solana Breakpoint 2026', location: '🇬🇧 London, UK', url: 'https://solana.com/breakpoint' },
+            { month: 'November', monthNum: '11', date: 'Nov 17 – 20', name: 'Microsoft Ignite 2026', location: '🇺🇸 San Francisco, USA', url: 'https://ignite.microsoft.com/' },
+            { month: 'December', monthNum: '12', date: 'Dec 1 – 2', name: 'Blockchain Life 2026', location: '🇦🇪 Dubai, UAE', url: 'https://blockchain-life.com/autumn2026/' },
+            { month: 'December', monthNum: '12', date: 'Dec 6 – 12', name: 'NeurIPS 2026', location: '🇦🇺 Sydney, Australia', url: 'https://neurips.cc' }
         ];
-        
-        const monthIcons = {
-            'January': '🈁', 'February': '📅', 'March': '🌸', 'April': '🌺',
-            'May': '🌻', 'June': '☀️', 'July': '🌴', 'August': '🏖️',
-            'September': '🍂', 'October': '🎃', 'November': '🦃', 'December': '🎄'
-        };
         
         function renderCalendar() {
             const calendar = document.getElementById('calendar');
@@ -278,20 +512,30 @@
                     currentMonth = event.month;
                     const monthDiv = document.createElement('div');
                     monthDiv.className = 'month';
-                    monthDiv.innerHTML = `<div class="month-header"><span class="month-icon">${monthIcons[currentMonth] || '📆'}</span>${currentMonth}</div>`;
+                    monthDiv.innerHTML = `
+                        <div class="month-header">
+                            ${currentMonth}
+                            <span class="month-number">${event.monthNum}</span>
+                        </div>
+                    `;
                     calendar.appendChild(monthDiv);
                 }
                 
                 const eventDiv = document.createElement('div');
-                eventDiv.className = `event ${event.type}`;
+                eventDiv.className = `event ${event.type || ''}`;
+                
+                let tag = '';
+                if (event.type === 'stellar') tag = '<span class="tag stellar">Stellar</span>';
+                if (event.type === 'attending') tag = '<span class="tag attending">Attending</span>';
+                
                 eventDiv.innerHTML = `
                     <div class="event-header">
-                        <span class="event-name">${event.name}</span>
+                        <span class="event-name">${event.name} ${tag}</span>
                         <span class="event-date">${event.date}</span>
                     </div>
                     <div class="event-location">📍 ${event.location}</div>
-                    ${event.contact ? `<div class="event-contact">👤 ${event.contact}</div>` : ''}
-                    ${event.url ? `<a href="${event.url}" target="_blank" class="event-url">🔗 Event Link</a>` : ''}
+                    ${event.contact ? `<div class="event-contact">→ ${event.contact}</div>` : ''}
+                    ${event.url ? `<a href="${event.url}" target="_blank" class="event-url">↗ Event Link</a>` : ''}
                 `;
                 calendar.appendChild(eventDiv);
             });
